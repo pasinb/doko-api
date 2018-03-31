@@ -12,13 +12,19 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 import json
+import pyrebase
 
 with open('credentials.json') as data_file:
     constants = json.load(data_file)
 
-# SECRET_KEY = constants['SECRET_KEY']
+config = {
+  "apiKey": constants['FIREBASE_APIKEY'],
+  "authDomain": constants['FIREBASE_AUTH_DOMAIN'],
+  "databaseURL": constants['FIREBASE_DATABASE_URL'],
+  "storageBucket": constants['FIREBASE_STORAGE_BUCKET'],
+}
 
-
+FIREBASE = pyrebase.initialize_app(config)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -28,12 +34,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '==dkib-nzv46w2cza(h0idsuz=a0llw2^vcnee+2%4aw6$vtb6'
+SECRET_KEY = constants['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -45,6 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'dapi'
 ]
 
 MIDDLEWARE = [
@@ -126,3 +134,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'dapi.authentication.FirebaseAuth',
+    ),
+}
