@@ -4,6 +4,7 @@ from django.conf import settings
 from django.http import HttpResponseNotAllowed, HttpResponse, HttpResponseBadRequest, JsonResponse, HttpResponseForbidden
 import json
 from requests.exceptions import HTTPError
+from .serializers import *
 
 def get_users(request):
     firebase = settings.FIREBASE
@@ -33,3 +34,15 @@ def auth(request):
 
     return HttpResponse(json.dumps(response))
 
+
+class CourseVs(viewsets.ModelViewSet):
+    queryset = Course.objects.all()
+    serializer_class = CourseSer
+
+class SectionVs(viewsets.ModelViewSet):
+    queryset = Section.objects.all()
+    serializer_class = SectionSer
+
+class QuestionVs(viewsets.ModelViewSet):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSer
